@@ -9,171 +9,55 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var solid: MetatronSolid!
+    
     override func viewDidLoad() {
-        let solid = MetatronSolid(frame: view.frame, type: .cube)
+        view.backgroundColor = UIColor.black
+        solid = MetatronSolid(frame: self.view.frame, type: .metatron)
+        solid.tag = 10
         solid.backgroundColor = UIColor.clear
-        view.addSubview(solid)
-        view.layoutSubviews()
-    }
-}
-
-enum MetatronType {
-    case tetrahedron
-    case starTetrahedron
-    case cube
-    case octahedron
-    case dodecahedron
-    case icosahedron
-}
-
-class MetatronSolid: UIView {
-    var screenSize: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
-    var nodes: [Ring] = []
-    
-    init(frame: CGRect, type: MetatronType) {
-        super.init(frame: frame)
-        screenSize = UIScreen.main.bounds
+        self.view.addSubview(solid)
+        self.view.layoutSubviews()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func draw(_ rect: CGRect) {
-        drawNodes()
-        //drawLines()
-        drawCube()
-    }
-    
-    internal func drawNodes() -> () {
-        let radius: CGFloat = 30
-        
-        // a^2 + b^2 = c^2
-        // r^2 + b^2 = 2r^2
-        // b^2 = 2r^2 - r^2
-        
-        let offset: CGFloat = sqrt( pow(2 * radius, 2) - pow(radius, 2) )
-        
-        let topWidth: CGFloat = sqrt( pow(4 * radius, 2) - pow(2 * radius, 2) )
-        
-        var node1Point = CGPoint(x: (screenSize.width / 2) - radius, y: 300)
-        var node2Point = CGPoint(x: node1Point.x + topWidth, y: node1Point.y - (radius * 2))
-        var node3Point = CGPoint(x: node1Point.x + topWidth, y: node1Point.y - (radius * 6))
-        
-        for _ in 1...5 {
-            let node1 = Ring(frame: CGRect(x: node1Point.x, y: node1Point.y, width: radius * 2, height: radius * 2))
-            node1.backgroundColor = UIColor.clear
-            
-            let node2 = Ring(frame: CGRect(x: node2Point.x, y: node2Point.y, width: radius * 2, height: radius * 2))
-            node2.backgroundColor = UIColor.clear
-            
-            let node3 = Ring(frame: CGRect(x: node3Point.x, y: node3Point.y, width: radius * 2, height: radius * 2))
-            node3.backgroundColor = UIColor.clear
-            
-            super.addSubview(node1)
-            super.addSubview(node2)
-            super.addSubview(node3)
-            
-            nodes.append(contentsOf: [node1, node2, node3])
-            
-            node1Point.y = node1Point.y - (radius * 2)
-            
-            node2Point.x = node2Point.x - offset
-            node2Point.y = node2Point.y - radius
-            
-            node3Point.x = node3Point.x - offset
-            node3Point.y = node3Point.y + radius
-        }
-        super.layoutSubviews()
-    }
-    
-    internal func drawLines() -> () {
-        let lineWidth: CGFloat = 1
-        let lineColor: CGColor = UIColor.black.cgColor
-        
-        for ring in nodes {
-            for target in nodes {
-                let linePath = UIBezierPath()
-                linePath.move(to: ring.center)
-                linePath.addLine(to: target.center)
-                
-                let shapeLayer = CAShapeLayer()
-                shapeLayer.path = linePath.cgPath
-                shapeLayer.strokeColor = lineColor
-                shapeLayer.fillColor = UIColor.clear.cgColor
-                shapeLayer.lineWidth = lineWidth
-                shapeLayer.strokeEnd = 0
-                
-                layer.addSublayer(shapeLayer)
-                let animation = CABasicAnimation(keyPath: "strokeEnd")
-                animation.duration = 5
-                animation.toValue = 2
-                animation.isRemovedOnCompletion = false
-                animation.repeatCount = .infinity
-                animation.autoreverses = true
-                shapeLayer.add(animation, forKey: "myanim")
+    @IBAction func switchChanged(_ sender: UISwitch) {
+        switch sender.tag {
+        case 0:
+            if sender.isOn {
+                solid.drawStencil = true
+            } else {
+                solid.drawStencil = false
             }
+        case 1:
+            if sender.isOn {
+                solid.shouldRepeat = true
+            } else {
+                solid.shouldRepeat = false
+            }
+        default:
+            print("error")
         }
     }
     
-    internal func drawCube() -> () {
-        let lineWidth: CGFloat = 2
-        let lineColor: CGColor = UIColor.red.cgColor
-        
-        let cube: [[Int]] = [[0, 1], [1, 2], [2, 12], [12, 13], [13, 14], [14, 0],
-                             [3, 4], [4, 5], [5, 9], [9, 10], [10, 11], [11, 3],
-                             [0, 6], [1, 6], [2, 6], [12, 6], [13, 6], [14, 6]]
-        
-        for coord in cube {
-            let ring = nodes[coord[0]]
-            let target = nodes[coord[1]]
-            
-            let linePath = UIBezierPath()
-            linePath.move(to: ring.center)
-            linePath.addLine(to: target.center)
-            
-            let shapeLayer = CAShapeLayer()
-            shapeLayer.path = linePath.cgPath
-            shapeLayer.strokeColor = lineColor
-            shapeLayer.fillColor = UIColor.clear.cgColor
-            shapeLayer.lineWidth = lineWidth
-            shapeLayer.strokeEnd = 0
-            
-            layer.addSublayer(shapeLayer)
-            let animation = CABasicAnimation(keyPath: "strokeEnd")
-            animation.duration = 3
-            animation.toValue = 2
-            animation.isRemovedOnCompletion = false
-            animation.repeatCount = .infinity
-            animation.autoreverses = true
-            shapeLayer.add(animation, forKey: "myanim")
+    @IBAction func buttonTapped(_ sender: UIButton) {
+        switch sender.tag {
+        case 0:
+            print("tetrahedron")
+            solid.shape = .tetrahedron
+        case 1:
+            print("cube")
+            solid.shape = .cube
+        case 2:
+            print("octahedron")
+            solid.shape = .octahedron
+        case 3:
+            print("icosahedron")
+            solid.shape = .icosahedron
+        case 4:
+            print("metatron")
+            solid.shape = .metatron
+        default:
+            print("error")
         }
-    }
-}
-
-class Ring: UIView {
-    override func draw(_ rect: CGRect) {
-        drawRingFittingInsideView()
-    }
-    
-    internal func drawRingFittingInsideView() -> () {
-        let halfSize:CGFloat = min( bounds.size.width/2, bounds.size.height/2)
-        let desiredLineWidth:CGFloat = 1
-        
-        let circlePath = UIBezierPath(
-            arcCenter: CGPoint(x:halfSize,y:halfSize),
-            radius: CGFloat( halfSize - (desiredLineWidth/2) ),
-            startAngle: CGFloat(0),
-            endAngle:CGFloat(Double.pi * 2),
-            clockwise: true)
-        
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = circlePath.cgPath
-        
-        shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.strokeColor = UIColor.clear.cgColor
-        shapeLayer.lineWidth = desiredLineWidth
-        
-        layer.addSublayer(shapeLayer)
     }
 }

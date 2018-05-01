@@ -12,6 +12,7 @@
 		AE44C83320977C3500D74A01 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE44C83120977C3500D74A01 /* Main.storyboard */; };
 		AE44C83520977C3F00D74A01 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE44C83420977C3F00D74A01 /* Assets.xcassets */; };
 		AE44C83820977C3F00D74A01 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE44C83620977C3F00D74A01 /* LaunchScreen.storyboard */; };
+		AE44C8402098E87D00D74A01 /* MetatronSolid.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE44C83F2098E87D00D74A01 /* MetatronSolid.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		AE44C83420977C3F00D74A01 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AE44C83720977C3F00D74A01 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AE44C83920977C3F00D74A01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AE44C83F2098E87D00D74A01 /* MetatronSolid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetatronSolid.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				AE44C82D20977C3500D74A01 /* AppDelegate.swift */,
 				AE44C82F20977C3500D74A01 /* ViewController.swift */,
+				AE44C83F2098E87D00D74A01 /* MetatronSolid.swift */,
 				AE44C83120977C3500D74A01 /* Main.storyboard */,
 				AE44C83420977C3F00D74A01 /* Assets.xcassets */,
 				AE44C83620977C3F00D74A01 /* LaunchScreen.storyboard */,
@@ -137,6 +140,7 @@
 			files = (
 				AE44C83020977C3500D74A01 /* ViewController.swift in Sources */,
 				AE44C82E20977C3500D74A01 /* AppDelegate.swift in Sources */,
+				AE44C8402098E87D00D74A01 /* MetatronSolid.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

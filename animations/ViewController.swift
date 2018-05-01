@@ -41,7 +41,8 @@ class MetatronSolid: UIView {
     
     override func draw(_ rect: CGRect) {
         drawNodes()
-        drawLines()
+        //drawLines()
+        drawCube()
     }
     
     internal func drawNodes() -> () {
@@ -89,7 +90,6 @@ class MetatronSolid: UIView {
     internal func drawLines() -> () {
         let lineWidth: CGFloat = 1
         let lineColor: CGColor = UIColor.black.cgColor
-        let group = CAAnimationGroup()
         
         for ring in nodes {
             for target in nodes {
@@ -112,9 +112,41 @@ class MetatronSolid: UIView {
                 animation.repeatCount = .infinity
                 animation.autoreverses = true
                 shapeLayer.add(animation, forKey: "myanim")
-                
-                group.animations?.append(animation)
             }
+        }
+    }
+    
+    internal func drawCube() -> () {
+        let lineWidth: CGFloat = 2
+        let lineColor: CGColor = UIColor.red.cgColor
+        
+        let cube: [[Int]] = [[0, 1], [1, 2], [2, 12], [12, 13], [13, 14], [14, 0],
+                             [3, 4], [4, 5], [5, 9], [9, 10], [10, 11], [11, 3],
+                             [0, 6], [1, 6], [2, 6], [12, 6], [13, 6], [14, 6]]
+        
+        for coord in cube {
+            let ring = nodes[coord[0]]
+            let target = nodes[coord[1]]
+            
+            let linePath = UIBezierPath()
+            linePath.move(to: ring.center)
+            linePath.addLine(to: target.center)
+            
+            let shapeLayer = CAShapeLayer()
+            shapeLayer.path = linePath.cgPath
+            shapeLayer.strokeColor = lineColor
+            shapeLayer.fillColor = UIColor.clear.cgColor
+            shapeLayer.lineWidth = lineWidth
+            shapeLayer.strokeEnd = 0
+            
+            layer.addSublayer(shapeLayer)
+            let animation = CABasicAnimation(keyPath: "strokeEnd")
+            animation.duration = 3
+            animation.toValue = 2
+            animation.isRemovedOnCompletion = false
+            animation.repeatCount = .infinity
+            animation.autoreverses = true
+            shapeLayer.add(animation, forKey: "myanim")
         }
     }
 }

@@ -15,29 +15,29 @@ class GeometricActivityIndicator: UIView {
     // --------------------------
     // MARK - STENCIL ATTRIBUTES
     // --------------------------
-    fileprivate var nodes: [Ring]
+    var nodes: [Ring]
     
-    @IBInspectable public var shouldDrawStencil: Bool = true {
+    @IBInspectable var shouldDrawStencil: Bool = true {
         didSet {
             reloadOptions()
         }
     }
     
-    public var stencilAnimDuration: CFTimeInterval = 1.5
+    var stencilAnimDuration: CFTimeInterval = 1.5
     
-    public var stencilAnimFromValue: Float = -0.5
-    fileprivate var pausedStencilAnimFromValue: Float = 1
+    var stencilAnimFromValue: Float = -0.5
+    var pausedStencilAnimFromValue: Float = 1
     
-    public var stencilAnimToValue: Float = 2
-    fileprivate var pausedStencilAnimToValue: Float = 1
+    var stencilAnimToValue: Float = 2
+    var pausedStencilAnimToValue: Float = 1
     
-    @IBInspectable public var stencilLineColor: UIColor = UIColor.darkGray {
+    @IBInspectable var stencilLineColor: UIColor = UIColor.darkGray {
         didSet {
             reloadOptions()
         }
     }
     
-    @IBInspectable public var stencilLineWidth: CGFloat = 1 {
+    @IBInspectable var stencilLineWidth: CGFloat = 1 {
         didSet {
             reloadOptions()
         }
@@ -46,27 +46,27 @@ class GeometricActivityIndicator: UIView {
     // --------------------------
     // MARK - SHAPE ATTRIBUTES
     // --------------------------
-    public var shapeAnimDuration: CFTimeInterval = 1.5
+    var shapeAnimDuration: CFTimeInterval = 1.5
     
-    public var shapeAnimFromValue: Float = -2
-    fileprivate var pausedShapeAnimFromValue: Float = 1
+    var shapeAnimFromValue: Float = -2
+    var pausedShapeAnimFromValue: Float = 1
     
-    public var shapeAnimToValue: Float = 1.5
-    fileprivate var pausedShapeAnimToValue: Float = 1
+    var shapeAnimToValue: Float = 1.5
+    var pausedShapeAnimToValue: Float = 1
     
-    @IBInspectable public var shapeTypeIndex: Int = 0 {
+    @IBInspectable var shapeTypeIndex: Int = 1 {
         didSet {
             reloadOptions()
         }
     }
     
-    @IBInspectable public var shapeLineColor: UIColor = UIColor.red {
+    @IBInspectable var shapeLineColor: UIColor = UIColor.red {
         didSet {
             reloadOptions()
         }
     }
     
-    @IBInspectable public var shapeLineWidth: CGFloat = 0 {
+    @IBInspectable var shapeLineWidth: CGFloat = 2 {
         didSet {
             reloadOptions()
         }
@@ -75,40 +75,41 @@ class GeometricActivityIndicator: UIView {
     // --------------------------
     // MARK - OVERRIDE VALUES
     // --------------------------
-    internal override var bounds: CGRect {
+    override var bounds: CGRect {
         didSet {
             reloadOptions()
         }
     }
     
-    internal override var intrinsicContentSize: CGSize {
+    override var intrinsicContentSize: CGSize {
         return CGSize(width: 30, height: 30)
     }
     
     // --------------------------
     // MARK - OVERRIDE METHODS
     // --------------------------
-    internal override func layoutSubviews() {
+    override func layoutSubviews() {
         self.backgroundColor = .clear
         
         super.layoutSubviews()
     }
     
-    internal override init(frame: CGRect) {
+    override init(frame: CGRect) {
         nodes = []
         
         super.init(frame: frame)
     }
     
-    internal required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         nodes = []
         
         super.init(coder: aDecoder)
         
     }
     
-    internal override func draw(_ rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         makeNodes()
+        
         if shouldDrawStencil {
             drawMetatron(isStencil: true)
         }
@@ -136,14 +137,14 @@ class GeometricActivityIndicator: UIView {
     // --------------------------
     // MARK - HELPER METHODS
     // --------------------------
-    fileprivate func reloadOptions() {
+    func reloadOptions() {
         layer.sublayers?.forEach({ (layer) in
             layer.removeFromSuperlayer()
         })
         setNeedsDisplay()
     }
     
-    fileprivate func makeNodes() -> () {
+    func makeNodes() -> () {
         let radius: CGFloat = bounds.height / 8
         
         let offset: CGFloat = sqrt( pow(2 * radius, 2) - pow(radius, 2) )
@@ -180,7 +181,7 @@ class GeometricActivityIndicator: UIView {
     // --------------------------
     // MARK - DRAWING METHOD
     // --------------------------
-    fileprivate func drawShapeFromCoords(coords: [[Int]], isStencil: Bool = false) {
+    func drawShapeFromCoords(coords: [[Int]], isStencil: Bool) {
         for coord in coords {
             let ring = nodes[coord[0]]
             let target = nodes[coord[1]]
@@ -194,7 +195,7 @@ class GeometricActivityIndicator: UIView {
             shapeLayer.strokeColor = isStencil ? stencilLineColor.cgColor : shapeLineColor.cgColor
             shapeLayer.fillColor = UIColor.clear.cgColor
             shapeLayer.lineWidth = isStencil ? stencilLineWidth : shapeLineWidth
-            shapeLayer.strokeEnd = 0
+            shapeLayer.lineCap = kCALineCapRound
             
             layer.addSublayer(shapeLayer)
             let animation = CABasicAnimation(keyPath: "strokeEnd")
@@ -211,7 +212,7 @@ class GeometricActivityIndicator: UIView {
     // --------------------------
     // MARK - ANIMATION CONTROL METHODS
     // --------------------------
-    public func startAnimating() {
+    func startAnimating() {
         pausedStencilAnimFromValue = stencilAnimFromValue
         pausedStencilAnimToValue = stencilAnimToValue
         
@@ -221,7 +222,7 @@ class GeometricActivityIndicator: UIView {
         reloadOptions()
     }
     
-    public func stopAnimating() {
+    func stopAnimating() {
         pausedStencilAnimFromValue = 1
         pausedStencilAnimToValue = 1
         
@@ -234,16 +235,16 @@ class GeometricActivityIndicator: UIView {
     // --------------------------
     // MARK - SHAPE COORDINATES
     // --------------------------
-    fileprivate func drawCube() -> () {
+    func drawCube() -> () {
         
         let cube: [[Int]] = [[0, 1], [1, 2], [2, 12], [12, 13], [13, 14], [14, 0],
                              [3, 4], [4, 5], [5, 9], [9, 10], [10, 11], [11, 3],
                              [0, 6], [1, 6], [2, 6], [12, 6], [13, 6], [14, 6]]
         
-        drawShapeFromCoords(coords: cube)
+        drawShapeFromCoords(coords: cube, isStencil: false)
     }
     
-    fileprivate func drawOctahedron() -> () {
+    func drawOctahedron() -> () {
         let coords: [[Int]] = [[0, 1], [1, 2], [2, 12], [12, 13], [13, 14], [14, 0],
                                [3, 4], [4, 5], [5, 9], [9, 10], [10, 11], [11, 3],
                                [12, 14], [14, 1], [1, 12],
@@ -251,28 +252,28 @@ class GeometricActivityIndicator: UIView {
                                [10, 5], [5, 3], [3, 10],
                                [11, 4], [4, 9], [9, 11]]
         
-        drawShapeFromCoords(coords: coords)
+        drawShapeFromCoords(coords: coords, isStencil: false)
     }
     
-    fileprivate func drawTetrahedron() -> () {
+    func drawTetrahedron() -> () {
         let coords: [[Int]] = [[12, 14], [14, 1], [1, 12],
                                [13, 2], [2, 0], [0, 13],
                                [11, 4], [4, 9], [9, 11],
                                [12, 6], [14, 6], [1, 6]]
         
-        drawShapeFromCoords(coords: coords)
+        drawShapeFromCoords(coords: coords, isStencil: false)
     }
     
-    fileprivate func drawIcosahedron() -> () {
+    func drawIcosahedron() -> () {
         let coords: [[Int]] = [[0, 1], [1, 2], [2, 12], [12, 13], [13, 14], [14, 0],
                                [13, 10], [0, 3], [2, 5],
                                [12, 14], [14, 1], [1, 12],
                                [10, 5], [5, 3], [3, 10]]
         
-        drawShapeFromCoords(coords: coords)
+        drawShapeFromCoords(coords: coords, isStencil: false)
     }
     
-    fileprivate func drawUnnamed1() -> () {
+    func drawUnnamed1() -> () {
         let coords: [[Int]] = [[0, 1], [1, 2], [2, 12], [12, 13], [13, 14], [14, 0],
                                [12, 10], [12, 5], [12, 11], [12, 4], [12, 6],
                                [2, 9], [2, 4], [2, 10], [2, 3], [2, 6],
@@ -281,10 +282,10 @@ class GeometricActivityIndicator: UIView {
                                [14, 3], [14, 10], [14, 9], [14, 4], [14, 6],
                                [13, 11], [13, 9], [13, 3], [13, 5], [13, 6]]
         
-        drawShapeFromCoords(coords: coords)
+        drawShapeFromCoords(coords: coords, isStencil: false)
     }
     
-    fileprivate func drawMetatron(isStencil: Bool = false) -> () {
+    func drawMetatron(isStencil: Bool = false) -> () {
         let coords: [[Int]] = [[0, 1], [1, 2], [2, 12], [12, 13], [13, 14], [14, 0],
                                [12, 10], [12, 5], [12, 11], [12, 4], [12, 6],
                                [2, 9], [2, 4], [2, 10], [2, 3], [2, 6],
@@ -299,11 +300,11 @@ class GeometricActivityIndicator: UIView {
         if isStencil {
             drawShapeFromCoords(coords: coords, isStencil: true)
         } else {
-            drawShapeFromCoords(coords: coords)
+            drawShapeFromCoords(coords: coords, isStencil: false)
         }
     }
     
-    fileprivate func drawUnnamed3() -> () {
+    func drawUnnamed3() -> () {
         drawCube()
         drawOctahedron()
         drawTetrahedron()

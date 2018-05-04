@@ -13,8 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var solid: GeometricActivityIndicator!
     
     override func viewDidLoad() {
-        solid.stencilAnimFromValue = 1
-        solid.stencilAnimToValue = 1
+        
     }
     
     @IBAction func buttonTapped(_ sender: UIButton) {

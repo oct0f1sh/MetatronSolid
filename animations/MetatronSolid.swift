@@ -95,7 +95,7 @@ class MetatronSolid: UIView {
         
         let topWidth: CGFloat = sqrt( pow(4 * radius, 2) - pow(2 * radius, 2) )
         
-        var node1Point = CGPoint(x: (screenSize.width / 2) - radius, y: 450)
+        var node1Point = CGPoint(x: (screenSize.width / 2) - radius, y: screenSize.height / 2)
         var node2Point = CGPoint(x: node1Point.x + topWidth, y: node1Point.y - (radius * 2))
         var node3Point = CGPoint(x: node1Point.x + topWidth, y: node1Point.y - (radius * 6))
         

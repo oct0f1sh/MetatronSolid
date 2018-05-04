@@ -9,55 +9,26 @@
 import UIKit
 
 class ViewController: UIViewController {
-    var solid: MetatronSolid!
+    
+    @IBOutlet weak var solid: GeometricActivityIndicator!
     
     override func viewDidLoad() {
-        view.backgroundColor = UIColor.black
-        solid = MetatronSolid(frame: self.view.frame, type: .metatron)
-        solid.tag = 10
-        solid.backgroundColor = UIColor.clear
-        self.view.addSubview(solid)
-        self.view.layoutSubviews()
-    }
-    
-    @IBAction func switchChanged(_ sender: UISwitch) {
-        switch sender.tag {
-        case 0:
-            if sender.isOn {
-                solid.drawStencil = true
-            } else {
-                solid.drawStencil = false
-            }
-        case 1:
-            if sender.isOn {
-                solid.shouldRepeat = true
-            } else {
-                solid.shouldRepeat = false
-            }
-        default:
-            print("error")
-        }
+        solid.stencilAnimFromValue = 1
+        solid.stencilAnimToValue = 1
     }
     
     @IBAction func buttonTapped(_ sender: UIButton) {
         switch sender.tag {
-        case 0:
-            print("tetrahedron")
-            solid.shape = .tetrahedron
-        case 1:
-            print("cube")
-            solid.shape = .cube
-        case 2:
-            print("octahedron")
-            solid.shape = .octahedron
-        case 3:
-            print("icosahedron")
-            solid.shape = .icosahedron
-        case 4:
-            print("metatron")
-            solid.shape = .metatron
+        case 0: // LEFT BUTTON TAPPED
+            solid.shapeTypeIndex -= 1
+        case 1: // RIGHT BUTTON TAPPED
+            solid.shapeTypeIndex += 1
+        case 2: // START BUTTON TAPPED
+            solid.startAnimating()
+        case 3: // STOP BUTTON TAPPED
+            solid.stopAnimating()
         default:
-            print("error")
+            break
         }
     }
 }
